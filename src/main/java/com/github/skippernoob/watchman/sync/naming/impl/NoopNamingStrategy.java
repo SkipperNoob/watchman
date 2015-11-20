@@ -14,6 +14,6 @@ public class NoopNamingStrategy implements NamingStrategy {
 
     @Override
     public String getNewName(String original) {
-        throw new UnsupportedOperationException("not implemented");
+        return original;
     }
 }
