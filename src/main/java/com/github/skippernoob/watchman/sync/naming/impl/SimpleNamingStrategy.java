@@ -12,7 +12,7 @@ public class SimpleNamingStrategy implements NamingStrategy {
         this.suffix = suffix;
     }
 
-    public NamingStrategy create(String suffix) {
+    public static NamingStrategy create(String suffix) {
         return new SimpleNamingStrategy(suffix);
     }
 

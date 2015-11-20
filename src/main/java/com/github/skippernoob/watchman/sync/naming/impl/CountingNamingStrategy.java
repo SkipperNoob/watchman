@@ -10,7 +10,7 @@ import com.github.skippernoob.watchman.sync.naming.NamingStrategy;
 public class CountingNamingStrategy implements NamingStrategy {
     private CountingNamingStrategy() {}
 
-    public NamingStrategy create() {
+    public static NamingStrategy create() {
         return new CountingNamingStrategy();
     }
 
