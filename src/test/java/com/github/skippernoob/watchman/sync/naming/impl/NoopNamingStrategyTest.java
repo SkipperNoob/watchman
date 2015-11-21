@@ -1,6 +1,28 @@
 package com.github.skippernoob.watchman.sync.naming.impl;
 
-// TODO: implement tests
-public class NoopNamingStrategyTest {
+import com.github.skippernoob.watchman.sync.naming.NamingStrategy;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import static org.junit.Assert.assertEquals;
+
+public class NoopNamingStrategyTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void testReturnsSameName() throws Exception {
+        NamingStrategy noopName = NoopNamingStrategy.create();
+        assertEquals("testing.txt", noopName.getNewName("testing.txt"));
+    }
+
+    @Test
+    public void testThrowsIfNameIsNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("original filename is null");
+
+        NamingStrategy strategy = NoopNamingStrategy.create();
+        strategy.getNewName(null);
+    }
 }
