@@ -2,9 +2,6 @@ package com.github.skippernoob.watchman.sync.naming.impl;
 
 import com.github.skippernoob.watchman.sync.naming.NamingStrategy;
 
-// TODO: implement noop naming strategy. Used when no suffix is specified
-// e.g.
-// file.txt -> file.txt
 public class NoopNamingStrategy implements NamingStrategy {
     private NoopNamingStrategy() {}
 
@@ -13,7 +10,10 @@ public class NoopNamingStrategy implements NamingStrategy {
     }
 
     @Override
-    public String getNewName(String original) {
+    public String getNewName(String original) throws NullPointerException {
+        if (original == null) {
+            throw new NullPointerException("original filename is null");
+        }
         return original;
     }
 }

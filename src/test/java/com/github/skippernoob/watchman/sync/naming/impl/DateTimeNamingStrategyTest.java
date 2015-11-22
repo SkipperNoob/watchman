@@ -26,6 +26,7 @@ public class DateTimeNamingStrategyTest {
 
     @Test
     public void testReturnsNameWithFormattingSuffix() throws Exception {
+        System.out.println(fixedClock);
         NamingStrategy strategy = DateTimeNamingStrategy.create("yyyyMMdd_HHmm", fixedClock);
         assertEquals("foo.txt.20151121_1442", strategy.getNewName("foo.txt"));
     }

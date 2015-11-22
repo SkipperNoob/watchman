@@ -38,7 +38,7 @@ public class CountingNamingStrategyTest {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("original filename is null");
 
-        NamingStrategy strategy = NoopNamingStrategy.create();
+        NamingStrategy strategy = CountingNamingStrategy.create();
         strategy.getNewName(null);
     }
 }
