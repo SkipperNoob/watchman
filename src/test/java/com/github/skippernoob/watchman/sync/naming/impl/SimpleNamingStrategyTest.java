@@ -13,8 +13,8 @@ public class SimpleNamingStrategyTest {
 
     @Test
     public void testReturnsNameWithSuffix() {
-        NamingStrategy strategy = SimpleNamingStrategy.create("bak");
-        assertEquals("testing.txt.bak", strategy.getNewName("testing.txt"));
+        NamingStrategy strategy = SimpleNamingStrategy.create("bla");
+        assertEquals("testing.txt.bla", strategy.getNewName("testing.txt"));
     }
 
     @Test
