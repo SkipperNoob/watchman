@@ -13,8 +13,8 @@ public class NoopNamingStrategyTest {
 
     @Test
     public void testReturnsSameName() throws Exception {
-        NamingStrategy noopName = NoopNamingStrategy.create();
-        assertEquals("testing.txt", noopName.getNewName("testing.txt"));
+        NamingStrategy strategy = NoopNamingStrategy.create();
+        assertEquals("testing.txt", strategy.getNewName("testing.txt"));
     }
 
     @Test
