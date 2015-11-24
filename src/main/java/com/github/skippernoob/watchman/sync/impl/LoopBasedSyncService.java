@@ -15,18 +15,21 @@ public class LoopBasedSyncService implements SyncService {
         this.namingStrategy = namingStrategy;
     }
 
-    public SyncService create(String source, String destination, NamingStrategy strategy) {
+    public static SyncService create(String source, String destination, NamingStrategy strategy) {
         return new LoopBasedSyncService(source, destination, strategy);
     }
 
+    @Override
     public String getSource() {
         return source;
     }
 
+    @Override
     public String getDestination() {
         return destination;
     }
 
+    @Override
     public NamingStrategy getNamingStrategy() {
         return namingStrategy;
     }
