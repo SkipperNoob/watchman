@@ -18,6 +18,12 @@ public class SimpleNamingStrategyTest {
     }
 
     @Test
+    public void testReturnsNameWithDefaultSuffix() throws Exception {
+        NamingStrategy strategy = SimpleNamingStrategy.create();
+        assertEquals("testing.txt.bak", strategy.getNewName("testing.txt"));
+    }
+
+    @Test
     public void testThrowsIfNameIsNull() throws Exception {
         thrown.expect(NullPointerException.class);
         thrown.expectMessage("original filename is null");

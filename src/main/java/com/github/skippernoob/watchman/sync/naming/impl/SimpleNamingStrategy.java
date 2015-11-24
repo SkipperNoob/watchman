@@ -9,6 +9,10 @@ public class SimpleNamingStrategy implements NamingStrategy {
         this.suffix = suffix;
     }
 
+    public static NamingStrategy create() {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
     public static NamingStrategy create(String suffix) {
         if (suffix == null) {
             throw new NullPointerException("suffix is null");
