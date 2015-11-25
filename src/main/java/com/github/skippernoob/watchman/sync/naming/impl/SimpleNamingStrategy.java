@@ -3,6 +3,7 @@ package com.github.skippernoob.watchman.sync.naming.impl;
 import com.github.skippernoob.watchman.sync.naming.NamingStrategy;
 
 public class SimpleNamingStrategy implements NamingStrategy {
+    private static final String DEFAULT_SUFFIX = "bak";
     private final String suffix;
 
     private SimpleNamingStrategy(String suffix) {
@@ -10,13 +11,16 @@ public class SimpleNamingStrategy implements NamingStrategy {
     }
 
     public static NamingStrategy create() {
-        return new SimpleNamingStrategy("bak");
+        return new SimpleNamingStrategy(DEFAULT_SUFFIX);
     }
 
     public static NamingStrategy create(String suffix) {
         if (suffix == null) {
             throw new NullPointerException("suffix is null");
+        } else if ("".equals(suffix)) {
+            return NoopNamingStrategy.create();
         }
+
         return new SimpleNamingStrategy(suffix);
     }
 
