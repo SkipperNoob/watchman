@@ -88,8 +88,17 @@ public class SyncServiceFactoryImplTest {
     }
 
     @Test
-    public void testReturnsSyncServiceWithDateTimeNamingStrategy() throws Exception {
+    public void testThrowsIfStrategyTypeIsDateAndSuffixIsNull() throws Exception {
+        thrown.expect(NullPointerException.class);
+        thrown.expectMessage("datetime format is null");
+
         SyncService service = factory.create("foo", "bar", "date", null);
+        assertTrue(service.getNamingStrategy() instanceof DateTimeNamingStrategy);
+    }
+
+    @Test
+    public void testReturnsSyncServiceWithDateTimeNamingStrategy() throws Exception {
+        SyncService service = factory.create("foo", "bar", "date", "HHmm");
         assertTrue(service.getNamingStrategy() instanceof DateTimeNamingStrategy);
     }
 
