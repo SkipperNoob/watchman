@@ -76,9 +76,9 @@ public class SyncServiceFactoryImplTest {
     }
 
     @Test
-    public void testReturnsSyncServiceWithSimpleNamingStrategyWithDefaultSuffixIfSuffixIsEmpty() throws Exception {
+    public void testReturnsSyncServiceWithNoopNamingStrategyWithDefaultSuffixIfSuffixIsEmpty() throws Exception {
         SyncService service = factory.create("foo", "bar", "simple", "");
-        assertTrue(service.getNamingStrategy() instanceof SimpleNamingStrategy);
+        assertTrue(service.getNamingStrategy() instanceof NoopNamingStrategy);
     }
 
     @Test
