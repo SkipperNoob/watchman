@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SimpleNamingStrategyTest {
     @Rule
@@ -21,6 +22,12 @@ public class SimpleNamingStrategyTest {
     public void testReturnsNameWithDefaultSuffix() throws Exception {
         NamingStrategy strategy = SimpleNamingStrategy.create();
         assertEquals("testing.txt.bak", strategy.getNewName("testing.txt"));
+    }
+
+    @Test
+    public void testReturnsNoopStrategyForEmptySuffix() throws Exception {
+        NamingStrategy strategy = SimpleNamingStrategy.create("");
+        assertTrue(strategy instanceof NoopNamingStrategy);
     }
 
     @Test
