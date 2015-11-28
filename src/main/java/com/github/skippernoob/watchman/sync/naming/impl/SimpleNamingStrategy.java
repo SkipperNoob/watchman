@@ -10,7 +10,7 @@ public class SimpleNamingStrategy implements NamingStrategy {
     }
 
     public static NamingStrategy create() {
-        throw new UnsupportedOperationException("not implemented");
+        return new SimpleNamingStrategy("bak");
     }
 
     public static NamingStrategy create(String suffix) {
