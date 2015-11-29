@@ -40,7 +40,7 @@ public class SyncServiceFactoryImpl implements SyncServiceFactory {
             switch (strategyType) {
                 case "simple":
                     if (suffix == null) {
-                        strategy = SimpleNamingStrategy.create();
+                        strategy = SimpleNamingStrategy.createWithDefaultSuffix();
                     } else {
                         strategy = SimpleNamingStrategy.create(suffix);
                     }

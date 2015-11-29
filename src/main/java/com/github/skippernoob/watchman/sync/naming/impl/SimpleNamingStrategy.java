@@ -10,7 +10,7 @@ public class SimpleNamingStrategy implements NamingStrategy {
         this.suffix = suffix;
     }
 
-    public static NamingStrategy create() {
+    public static NamingStrategy createWithDefaultSuffix() {
         return new SimpleNamingStrategy(DEFAULT_SUFFIX);
     }
 

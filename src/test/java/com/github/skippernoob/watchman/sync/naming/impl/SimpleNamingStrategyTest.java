@@ -20,7 +20,7 @@ public class SimpleNamingStrategyTest {
 
     @Test
     public void testReturnsNameWithDefaultSuffix() throws Exception {
-        NamingStrategy strategy = SimpleNamingStrategy.create();
+        NamingStrategy strategy = SimpleNamingStrategy.createWithDefaultSuffix();
         assertEquals("testing.txt.bak", strategy.getNewName("testing.txt"));
     }
 
