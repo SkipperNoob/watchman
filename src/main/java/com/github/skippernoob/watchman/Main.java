@@ -11,7 +11,11 @@ public class Main {
     }
 
     // TODO: implement parsing params
-    protected static SyncService createSyncService(String[] args, Params params) {
+    protected static Params parseParams(String[] args) {
+        throw new UnsupportedOperationException("not implemented");
+    }
+
+    protected static SyncService createSyncService(Params params) {
         throw new UnsupportedOperationException("not implemented");
     }
 }
