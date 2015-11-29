@@ -58,6 +58,6 @@ public class SyncServiceFactoryImpl implements SyncServiceFactory {
             }
         }
 
-        return LoopBasedSyncService.create(source, destination, strategy);
+        return LoopBasedSyncService.createEndlessService(source, destination, strategy);
     }
 }
