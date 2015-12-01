@@ -8,7 +8,6 @@ import com.github.skippernoob.watchman.sync.SyncService;
 import com.github.skippernoob.watchman.sync.impl.SyncServiceFactoryImpl;
 
 
-// TODO: you need to use factory here
 public class Main {
     public static void main(String[] args) {
         createSyncService(parseParams(args));

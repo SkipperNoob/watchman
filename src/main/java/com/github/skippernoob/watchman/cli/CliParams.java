@@ -5,7 +5,6 @@ import com.beust.jcommander.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: implement
 public class CliParams implements Params {
     @Parameter
     private List<String> list = new ArrayList<>();

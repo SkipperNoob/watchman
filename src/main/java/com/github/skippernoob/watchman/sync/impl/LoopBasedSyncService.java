@@ -4,7 +4,6 @@ import com.github.skippernoob.watchman.sync.ServiceWatchStrategy;
 import com.github.skippernoob.watchman.sync.SyncService;
 import com.github.skippernoob.watchman.sync.naming.NamingStrategy;
 
-// TODO: implement service
 public class LoopBasedSyncService implements SyncService {
     private final String source;
     private final String destination;

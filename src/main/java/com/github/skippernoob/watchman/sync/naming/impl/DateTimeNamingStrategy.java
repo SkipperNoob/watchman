@@ -6,9 +6,6 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-// TODO: implement datetime based naming strategy
-// e.g.
-// file.txt with format "Hm" -> file.txt.1340
 public class DateTimeNamingStrategy implements NamingStrategy {
     private final String format;
     private final Clock clock;
