@@ -1,24 +1,38 @@
 package com.github.skippernoob.watchman.cli;
 
+import com.beust.jcommander.Parameter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 // TODO: implement
 public class CliParams implements Params {
+    @Parameter
+    private List<String> list = new ArrayList<>();
+
+    @Parameter(names = "--strategy", description = "Parameter of strategy")
+    private String suffixStrategy;
+
+    @Parameter(names = {"--suffix", "-s"}, description = "Suffix")
+    private String suffix;
+
     @Override
     public String getSource() {
-        throw new UnsupportedOperationException("not implemented");
+        return list.get(0);
     }
 
     @Override
     public String getDestination() {
-        throw new UnsupportedOperationException("not implemented");
+        return list.get(1);
     }
 
     @Override
     public String getSuffix() {
-        throw new UnsupportedOperationException("not implemented");
+        return suffix;
     }
 
     @Override
     public String getSuffixStrategy() {
-        throw new UnsupportedOperationException("not implemented");
+        return suffixStrategy;
     }
 }
