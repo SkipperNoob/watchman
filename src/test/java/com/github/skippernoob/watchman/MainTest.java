@@ -62,4 +62,12 @@ public class MainTest {
         assertEquals(params.getSource(), "foo");
         assertEquals(params.getDestination(), "bar");
     }
+
+    @Test
+    public void testArgumentsCountShouldNotBreakValidation() throws Exception {
+        thrown.expect(ParameterException.class);
+        thrown.expectMessage("destination argument is required");
+
+        Main.parseParams(new String[] {"--suffix", "bak", "foo"});
+    }
 }
