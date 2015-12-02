@@ -12,6 +12,7 @@ public class CliParams implements Params {
     @Parameter(names = "--strategy", description = "Parameter of strategy")
     private String suffixStrategy;
 
+
     @Parameter(names = {"--suffix", "-s"}, description = "Suffix")
     private String suffix;
 
@@ -33,5 +34,9 @@ public class CliParams implements Params {
     @Override
     public String getSuffixStrategy() {
         return suffixStrategy;
+    }
+
+    public List<String> getList() {
+        return list;
     }
 }

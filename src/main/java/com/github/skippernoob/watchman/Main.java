@@ -7,22 +7,23 @@ import com.github.skippernoob.watchman.cli.Params;
 import com.github.skippernoob.watchman.sync.SyncService;
 import com.github.skippernoob.watchman.sync.impl.SyncServiceFactoryImpl;
 
-
 public class Main {
     public static void main(String[] args) {
         createSyncService(parseParams(args));
     }
 
     protected static Params parseParams(String[] args) {
-        if (args.length == 0) {
+        CliParams params = new CliParams();
+        new JCommander(params, args);
+
+        System.out.println(params.getList().size());
+        if (params.getList().size() == 0) {
             throw new ParameterException("source argument is required");
         }
-        if (args.length == 1) {
+        if (params.getList().size() == 1) {
             throw new ParameterException("destination argument is required");
         }
 
-        Params params = new CliParams();
-        new JCommander(params, args);
         return params;
     }
 
