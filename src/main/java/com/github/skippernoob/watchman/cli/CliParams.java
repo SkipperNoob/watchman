@@ -36,7 +36,7 @@ public class CliParams implements Params {
         return suffixStrategy;
     }
 
-    public List<String> getList() {
+    public List<String> getArguments() {
         return list;
     }
 }

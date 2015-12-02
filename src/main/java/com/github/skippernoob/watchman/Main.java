@@ -5,9 +5,12 @@ import com.beust.jcommander.ParameterException;
 import com.github.skippernoob.watchman.cli.CliParams;
 import com.github.skippernoob.watchman.cli.Params;
 import com.github.skippernoob.watchman.sync.SyncService;
+import com.github.skippernoob.watchman.sync.SyncServiceFactory;
 import com.github.skippernoob.watchman.sync.impl.SyncServiceFactoryImpl;
 
 public class Main {
+    private static final SyncServiceFactory syncServiceFactory = new SyncServiceFactoryImpl();
+
     public static void main(String[] args) {
         createSyncService(parseParams(args));
     }
@@ -16,11 +19,10 @@ public class Main {
         CliParams params = new CliParams();
         new JCommander(params, args);
 
-        System.out.println(params.getList().size());
-        if (params.getList().size() == 0) {
+        if (params.getArguments().size() == 0) {
             throw new ParameterException("source argument is required");
         }
-        if (params.getList().size() == 1) {
+        if (params.getArguments().size() == 1) {
             throw new ParameterException("destination argument is required");
         }
 
@@ -28,11 +30,9 @@ public class Main {
     }
 
     protected static SyncService createSyncService(Params params) {
-        SyncServiceFactoryImpl syncServiceFactory = new SyncServiceFactoryImpl();
-        SyncService syncService = syncServiceFactory.create(params.getSource(),
+        return syncServiceFactory.create(params.getSource(),
             params.getDestination(),
             params.getSuffixStrategy(),
             params.getSuffix());
-        return syncService;
     }
 }

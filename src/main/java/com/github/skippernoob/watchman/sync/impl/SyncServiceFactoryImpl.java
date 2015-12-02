@@ -8,7 +8,6 @@ import com.github.skippernoob.watchman.sync.naming.impl.DateTimeNamingStrategy;
 import com.github.skippernoob.watchman.sync.naming.impl.NoopNamingStrategy;
 import com.github.skippernoob.watchman.sync.naming.impl.SimpleNamingStrategy;
 
-// TODO: implement factory
 public class SyncServiceFactoryImpl implements SyncServiceFactory {
     @Override
     public SyncService create(String source, String destination, String strategyType, String suffix) {
