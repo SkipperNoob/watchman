@@ -68,9 +68,10 @@ public class LoopBasedSyncServiceTest {
     @Test
     public void testServiceOverridesExistingFile() throws Exception {
         File foo = folder.newFile("foo.txt");
-        File bar = folder.newFile("bar.txt");
+        File destination = folder.newFolder("put-here");
+        File existing = folder.newFile("put-here/foo.txt");
 
-        Thread thread = runService(foo.getAbsolutePath(), bar.getAbsolutePath(), NoopNamingStrategy.create());
+        Thread thread = runService(foo.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
 
         waitFor(1);
 
@@ -82,7 +83,7 @@ public class LoopBasedSyncServiceTest {
 
         thread.join();
 
-        assertEquals(foo.lastModified(), bar.lastModified());
+        assertEquals(foo.lastModified(), existing.lastModified());
     }
 
     @Test
@@ -116,7 +117,6 @@ public class LoopBasedSyncServiceTest {
 
     @Test
     public void testServiceCopiesFileTwiceWithCountingStrategy() throws Exception {
-        File root = folder.getRoot();
         File foo = folder.newFile("foo.txt");
         File destination = folder.newFolder("put-here");
 
