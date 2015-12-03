@@ -44,10 +44,10 @@ public class LoopBasedSyncServiceTest {
 
     @Test
     public void testServiceCopiesFileFromSourceToDestination() throws Exception {
-        File root = folder.getRoot();
         File foo = folder.newFile("foo.txt");
+        File destination = folder.newFolder("put-here");
 
-        Thread thread = runService(foo.getAbsolutePath(), root.getAbsolutePath(), NoopNamingStrategy.create());
+        Thread thread = runService(foo.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
 
         waitFor(1);
 
@@ -59,7 +59,7 @@ public class LoopBasedSyncServiceTest {
 
         thread.join();
 
-        File copied = new File(root, "foo.txt");
+        File copied = new File(destination, "foo.txt");
 
         assertTrue(copied.exists());
         assertEquals(foo.lastModified(), copied.lastModified());
