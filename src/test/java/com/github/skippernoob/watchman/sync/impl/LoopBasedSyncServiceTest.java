@@ -13,9 +13,7 @@ import org.junit.rules.Timeout;
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LoopBasedSyncServiceTest {
     @Rule
@@ -49,7 +47,7 @@ public class LoopBasedSyncServiceTest {
         File root = folder.getRoot();
         File foo = folder.newFile("foo.txt");
 
-        Thread thread = runService(foo.getAbsolutePath(), filePath(root, "bar.txt"), NoopNamingStrategy.create());
+        Thread thread = runService(foo.getAbsolutePath(), root.getAbsolutePath(), NoopNamingStrategy.create());
 
         waitFor(1);
 
@@ -61,10 +59,10 @@ public class LoopBasedSyncServiceTest {
 
         thread.join();
 
-        File bar = new File(root, "bar.txt");
+        File copied = new File(root, "foo.txt");
 
-        assertTrue(bar.exists());
-        assertEquals(foo.lastModified(), bar.lastModified());
+        assertTrue(copied.exists());
+        assertEquals(foo.lastModified(), copied.lastModified());
     }
 
     @Test
