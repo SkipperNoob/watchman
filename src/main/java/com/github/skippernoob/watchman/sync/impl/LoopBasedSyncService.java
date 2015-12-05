@@ -106,8 +106,14 @@ public class LoopBasedSyncService implements SyncService {
     }
 
     private String parseName(String name) {
-        String[] originalWithSuffix = name.split("\\\\");
-        return originalWithSuffix[originalWithSuffix.length - 1];
+        String[] originalFileName = name.split("\\\\");
+        String[] parseFileName = originalFileName[originalFileName.length - 1].split("\\.");
+        String fileName = null;
+        for (int i = 0; i < parseFileName.length - 2; i++) {
+            fileName += parseFileName[i];
+        }
+        return String.format("%s(%s).%s", fileName, parseFileName[parseFileName.length - 1],
+            parseFileName[parseFileName.length - 2]);
     }
 
     private void copyFile(File original, File replica) {
