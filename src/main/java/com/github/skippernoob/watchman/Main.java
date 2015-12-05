@@ -12,7 +12,8 @@ public class Main {
     private static final SyncServiceFactory syncServiceFactory = new SyncServiceFactoryImpl();
 
     public static void main(String[] args) {
-        createSyncService(parseParams(args));
+        SyncService service = createSyncService(parseParams(args));
+        service.watch();
     }
 
     protected static Params parseParams(String[] args) {
