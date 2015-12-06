@@ -44,16 +44,16 @@ public class LoopBasedSyncServiceTest {
 
     @Test
     public void testServiceCopiesFileFromSourceToDestination() throws Exception {
-        File foo = folder.newFile("foo.txt");
+        File source = folder.newFile("foo.txt");
         File destination = folder.newFolder("put-here");
 
-        Thread thread = runService(foo.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
+        Thread thread = runService(source.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
 
-        waitFor(1);
+        waitFor(2);
 
-        assertTrue(foo.setLastModified(now()));
+        assertTrue(source.setLastModified(now()));
 
-        waitFor(1);
+        waitFor(2);
 
         watchStrategy.stop();
 
@@ -62,28 +62,28 @@ public class LoopBasedSyncServiceTest {
         File copied = new File(destination, "foo.txt");
 
         assertTrue(copied.exists());
-        assertEquals(foo.lastModified(), copied.lastModified());
+        assertTrue(copied.lastModified() > source.lastModified());
     }
 
     @Test
     public void testServiceOverridesExistingFile() throws Exception {
-        File foo = folder.newFile("foo.txt");
+        File source = folder.newFile("foo.txt");
         File destination = folder.newFolder("put-here");
         File existing = folder.newFile("put-here/foo.txt");
 
-        Thread thread = runService(foo.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
+        Thread thread = runService(source.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
 
-        waitFor(1);
+        waitFor(2);
 
-        assertTrue(foo.setLastModified(now()));
+        assertTrue(source.setLastModified(now()));
 
-        waitFor(1);
+        waitFor(2);
 
         watchStrategy.stop();
 
         thread.join();
 
-        assertEquals(foo.lastModified(), existing.lastModified());
+        assertTrue(existing.lastModified() > source.lastModified());
     }
 
     @Test
@@ -98,11 +98,11 @@ public class LoopBasedSyncServiceTest {
 
         Thread thread = runService(root.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
 
-        waitFor(1);
+        waitFor(2);
 
         assertTrue(foo.setLastModified(now()));
 
-        waitFor(1);
+        waitFor(2);
 
         watchStrategy.stop();
 
@@ -122,15 +122,15 @@ public class LoopBasedSyncServiceTest {
 
         Thread thread = runService(foo.getAbsolutePath(), destination.getAbsolutePath(), CountingNamingStrategy.create());
 
-        waitFor(1);
+        waitFor(2);
 
         assertTrue(foo.setLastModified(now()));
 
-        waitFor(1);
+        waitFor(2);
 
         assertTrue(foo.setLastModified(now()));
 
-        waitFor(1);
+        waitFor(2);
 
         watchStrategy.stop();
 
@@ -142,6 +142,32 @@ public class LoopBasedSyncServiceTest {
         assertEquals(2, copiedFiles.length);
         assertEquals("foo.txt.1", copiedFiles[0].getName());
         assertEquals("foo.txt.2", copiedFiles[1].getName());
+    }
+
+    @Test
+    public void testServiceCopiesNewlyCreatedFiles() throws Exception {
+        File root = folder.getRoot();
+        File destination = folder.newFolder("put-here");
+
+        folder.newFile("foo.txt");
+
+        Thread thread = runService(root.getAbsolutePath(), destination.getAbsolutePath(), NoopNamingStrategy.create());
+
+        waitFor(2);
+
+        folder.newFile("bar.txt");
+
+        waitFor(2);
+
+        watchStrategy.stop();
+
+        thread.join();
+
+        File[] copiedFiles = destination.listFiles();
+
+        assertNotNull(copiedFiles);
+        assertEquals(1, copiedFiles.length);
+        assertEquals("bar.txt", copiedFiles[0].getName());
     }
 
     private Thread runService(String source,

@@ -2,18 +2,19 @@ package com.github.skippernoob.watchman.sync.impl;
 
 import com.github.skippernoob.watchman.sync.ServiceWatchStrategy;
 import com.github.skippernoob.watchman.sync.SyncService;
+import com.github.skippernoob.watchman.sync.exc.SyncServiceException;
 import com.github.skippernoob.watchman.sync.naming.NamingStrategy;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class LoopBasedSyncService implements SyncService {
+    private static final long DEFAULT_WAIT_TIME = 1000;
     private final String source;
     private final String destination;
     private final NamingStrategy namingStrategy;
     private final ServiceWatchStrategy watchStrategy;
-    private final Map<String, Long> infoAboutFiles = new HashMap<>();
+    private final Map<String, Long> filesLastModified = new HashMap<>();
 
     private LoopBasedSyncService(String source,
                                  String destination,
@@ -54,66 +55,43 @@ public class LoopBasedSyncService implements SyncService {
     }
 
     @Override
-    public void watch() {
+    public void watch() throws SyncServiceException {
         File original = new File(source);
         File replica = new File(destination);
-        File[] filesInDir = null;
+        boolean isSourceFolder = original.isDirectory();
 
-        if (original.isFile()) {
-            infoAboutFiles.put(original.toString(), original.lastModified());
-        }
-        if (original.isDirectory()) {
-            filesInDir = original.listFiles();
-            for (int i = 0; i < filesInDir.length; i++) {
-                infoAboutFiles.put(filesInDir[i].toString(), filesInDir[i].lastModified());
-            }
+        Set<File> filesToWatch = new HashSet<>();
+
+        if (isSourceFolder) {
+            filesToWatch.addAll(Arrays.asList(original.listFiles()));
+        } else {
+            filesToWatch.add(original);
         }
 
-        if (!replica.exists()) {
-            replica.mkdir();
+        for (File file : filesToWatch) {
+            filesLastModified.put(file.getAbsolutePath(), file.lastModified());
         }
 
-        while (true) {
-            if (original.isFile()) {
-                for (Map.Entry<String, Long> entry : infoAboutFiles.entrySet()) {
-                    if (original.equals(entry.getKey()) && original.lastModified() != entry.getValue()) {
-                        replica = new File(destination, parseName(namingStrategy.getNewName(original.getName())));
-                        copyFile(original, replica);
-                        infoAboutFiles.replace(original.toString(), original.lastModified());
-                    }
+        while (watchStrategy.shouldWatch()) {
+            if (!replica.exists()) {
+                if (replica.mkdir()) {
+                    throw new SyncServiceException("failed to create destination folder");
                 }
             }
 
-            if (original.isDirectory()) {
-                for (int i = 0; i < filesInDir.length; i++) {
-                    for (Map.Entry<String, Long> entry : infoAboutFiles.entrySet()) {
-                        if (filesInDir[i].toString().equals(entry.getKey()) && !entry.getValue().equals(filesInDir[i].lastModified())) {
-                            replica = new File(destination, parseName(namingStrategy.getNewName(filesInDir[i].getName())));
-                            copyFile(filesInDir[i], replica);
-                            infoAboutFiles.replace(original.toString(), original.lastModified());
-                        }
-                    }
-                }
+            if (isSourceFolder) {
+                filesToWatch.addAll(Arrays.asList(original.listFiles()));
             }
+
+            copyFiles(filesToWatch, replica);
 
             try {
-                Thread.sleep(3000);
+                Thread.sleep(DEFAULT_WAIT_TIME);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                throw new SyncServiceException("Failed to wait", e);
             }
         }
 
-    }
-
-    private String parseName(String name) {
-        String[] originalFileName = name.split("\\\\");
-        String[] parseFileName = originalFileName[originalFileName.length - 1].split("\\.");
-        String fileName = null;
-        for (int i = 0; i < parseFileName.length - 2; i++) {
-            fileName += parseFileName[i];
-        }
-        return String.format("%s(%s).%s", fileName, parseFileName[parseFileName.length - 1],
-            parseFileName[parseFileName.length - 2]);
     }
 
     private void copyFile(File original, File replica) {
@@ -129,28 +107,21 @@ public class LoopBasedSyncService implements SyncService {
             }
             outBuff.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SyncServiceException("failed to copy", e);
         }
     }
 
-//    private void copyDirectory(File original, File replica) {
-//        File[] files = original.listFiles();
-//        if (!(replica).exists()){
-//            replica.mkdir();
-//        }
-//
-//        for (int i = 0; i < files.length; i++){
-//            if (files[i].isFile()){
-//                File tmp = replica;
-//                File toFile = new File(tmp.getAbsolutePath(), files[i].getName());
-//                copyFile(files[i], toFile);
-//            }else if (files[i].isDirectory()){
-//                File dirOriginal = new File(original, files[i].getName());
-//                File dirReplica = new File(replica, files[i].getName());
-//                copyDirectory(dirOriginal, dirReplica);
-//            }else {
-//                System.out.println("???");
-//            }
-//        }
-//    }
+    private void copyFiles(Collection<File> sources, File destination) {
+        for (File file : sources) {
+            String filePath = file.getAbsolutePath();
+            Long currentLastModified = file.lastModified();
+            Long previousLastModified = filesLastModified.get(filePath);
+            if (previousLastModified == null || previousLastModified < currentLastModified) {
+                filesLastModified.put(filePath, currentLastModified);
+                if (file.isFile()) {
+                    copyFile(file, new File(destination, namingStrategy.getNewName(file.getName())));
+                }
+            }
+        }
+    }
 }
