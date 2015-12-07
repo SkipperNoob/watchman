@@ -74,7 +74,7 @@ public class LoopBasedSyncService implements SyncService {
 
         while (watchStrategy.shouldWatch()) {
             if (!replica.exists()) {
-                if (replica.mkdir()) {
+                if (!replica.mkdir()) {
                     throw new SyncServiceException("failed to create destination folder");
                 }
             }

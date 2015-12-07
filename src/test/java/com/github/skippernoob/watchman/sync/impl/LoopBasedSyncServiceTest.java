@@ -170,6 +170,33 @@ public class LoopBasedSyncServiceTest {
         assertEquals("bar.txt", copiedFiles[0].getName());
     }
 
+    @Test
+    public void testServiceShouldCreateDestinationFolderIfMissing() throws Exception {
+        File root = folder.getRoot();
+        File foo = folder.newFile("foo.txt");
+        String destinationPath = filePath(root, "put-here");
+
+        Thread thread = runService(foo.getAbsolutePath(), destinationPath, NoopNamingStrategy.create());
+
+        waitFor(2);
+
+        assertTrue(foo.setLastModified(now()));
+
+        waitFor(2);
+
+        watchStrategy.stop();
+
+        thread.join();
+
+        File destination = new File(destinationPath);
+
+        File[] copiedFiles = destination.listFiles();
+
+        assertNotNull(copiedFiles);
+        assertEquals(1, copiedFiles.length);
+        assertEquals("foo.txt", copiedFiles[0].getName());
+    }
+
     private Thread runService(String source,
                               String destination,
                               NamingStrategy strategy) {
